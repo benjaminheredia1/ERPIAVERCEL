@@ -1,0 +1,87 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+}
+
+model Category {
+  id          Int       @id @default(autoincrement())
+  name        String
+  description String
+  products    Product[]
+}
+
+model Product {
+  id          Int          @id @default(autoincrement())
+  name        String
+  description String?
+  price       Decimal
+  stock       Int?
+  categoryId  Int
+  category    Category     @relation(fields: [categoryId], references: [id])
+  orderItems  OrderItems[]
+  imageUrl    String?
+}
+
+model Person {
+  id                Int       @id @default(autoincrement())
+  firstName         String
+  middleName        String?
+  lastName          String?
+  secondLastName    String?
+  phoneNumber       String?
+  email             String?   @unique
+  bankAccountNumber String?
+  Employed          Employed?
+  order             Order[]   @relation("clientOrder")
+}
+
+model Employed {
+  id         Int     @id @default(autoincrement())
+  employedId Int     @unique
+  personId   Int     @unique
+  person     Person  @relation(fields: [personId], references: [id])
+  order      Order[] @relation("employedOrder")
+}
+
+model Order {
+  id          Int          @id @default(autoincrement())
+  orderNumber Int          @unique
+  personId    Int
+  employedId  Int?
+  totalAmount Decimal
+  orderItems  OrderItems[]
+  status      OrderStatus  @default(PENDING)
+  employed    Employed?    @relation("employedOrder", fields: [employedId], references: [id])
+  person      Person       @relation("clientOrder", fields: [personId], references: [id])
+}
+
+model OrderItems {
+  id        Int     @id @default(autoincrement())
+  orderId   Int
+  productId Int
+  order     Order   @relation(fields: [orderId], references: [id])
+  product   Product @relation(fields: [productId], references: [id])
+  quantity  Int
+}
+
+model CompanySettings {
+  id             Int    @id @default(autoincrement())
+  name           String
+  description    String
+  personality    String
+  salesMessaging String
+}
