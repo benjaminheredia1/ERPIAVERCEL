@@ -4,14 +4,6 @@ import { useEffect, useRef, useState } from 'react'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-
-type Msg = { id: string; role: 'user' | 'assistant'; text: string }
-"use client"
-
-import { useEffect, useRef, useState } from 'react'
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { Button } from '@/components/ui/button'
 import { z } from 'zod'
 
 type Msg = { id: string; role: 'user' | 'assistant'; text: string }
@@ -152,3 +144,4 @@ export default function ChatPage() {
     </div>
   )
 }
+
